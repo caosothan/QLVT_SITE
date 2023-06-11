@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+{% load static %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel = "stylesheet" href = "{% static 'style.css' %}" type = "text/css">
+<link rel = "stylesheet" href = "{% static 'bootstrap.min.css' %}" type = "text/css">
+<link rel = "stylesheet" href = "{% static 'bootstrap.css' %}" type = "text/css">
+<script lang="javascript" src="{% static 'js/main.js' %}"></script>
+<title>Main</title>
+</head>
+
+<body>
+    <!--Đoạn code sau dùng để đăngn xuất tài khoản-->
+    <div class="navbar">
+        <a href= {{link_logout}}>Logout</a>
+    </div>
+
+    <!--Đoạn code sau dùng để xuất file và nhập file-->
+    <div name = "body-app"   class = "column" style = "background-color: bisque;">
+        <div class = "column">
+            <!--Đoạn code dùng để nhập file-->
+            <form action = "/action/find/" class = "row-md-10 bg-light p-3 my-3"  method = "post">
+                <div name = "container-label-input" class = "form-group">
+                    {% csrf_token %}
+                    <label for = "field-to-find"><b>Tìm kiếm theo</b></label>
+                
+                    <select name = "field-to-find" id="field-to-find" type="text" value="Tìm kiếm theo" class = "form-control">
+                        <option>Tên thiết bị</option>
+                        <option>Số Serial</option>
+                        <option>Phân loại</option>
+                        <option>Nhà sản xuất</option>
+                        <option>Đài Viễn Thông/Điều hành/Vô tuyến</option>
+                        <option>Kết quả kiểm tra trước sửa chữa</option>
+                        <option>Tình trạng bàn giao đi sửa chữa</option>
+                        <option>Số serial sau SC</option>
+                        <option>Kết quả kiểm tra sau sửa chữa</option>
+                    </select>
+                </div>
+                <div class = "form-group">
+                    <label for = "key-to-find"><b>Từ khóa</b></label>
+                    <input name = "key-to-find" id = "key-to-find" type="text" value="Từ khóa" class = "form-control">
+                </div>
+    
+                <input type="submit" value="Tìm kiếm" class = "btn btn-primary btn-block">
+                
+            </form>
+      
+            <!--Đoạn code dùng để xuất file-->
+            <form action = "/action/export-file/"  class = "row-md-10 bg-light p-3 my-3"  method = "post">
+                <div class = "form-group">
+                    {% csrf_token %}
+                    <label for = "type_file"><b>Chọn loại file</b></label>
+                    <select name = "type_file" id="type_file" type="text" value="Tìm kiếm theo" class = "form-control">
+                        <option>xlsx</option>
+                        <option>csv</option>
+                    </select>
+                </div>
+                <div class = "form-group">
+                    <label><b>Tên đường dẫn</b></label>
+                    <!-- <input name = "dir" type="file" value="Đường dẫn" id = "dir" class = "form-control" webkitdirectory directory multiple> -->
+                    {{down_load_file.as_p}}
+                </div>
+    
+                <div class = "form-group">
+                <label><b>Tên file</b></label><br />
+                <input name = "name_file" type="text" value="Tên file" id = "name_file" class = "form-control">
+                </div>
+                <div name = "container" class = "form-group">
+                    <label for = "#field"><b>Điều kiện tìm kiếm xuất file</b></label>
+                
+                    <select name = "field" id="#field" type="text" value="Tìm kiếm theo" class = "form-control">
+                        <option>Tên thiết bị</option>
+                        <option>Số Serial</option>
+                        <option>Phân loại</option>
+                        <option>Nhà sản xuất</option>
+                        <option>Đài Viễn Thông/Điều hành/Vô tuyến</option>
+                        <option>Kết quả kiểm tra trước sửa chữa</option>
+                        <option>Tình trạng bàn giao đi sửa chữa</option>
+                        <option>Số serial sau SC</option>
+                        <option>Kết quả kiểm tra sau sửa chữa</option>
+                    </select>
+                </div>
+                <div class = "form-group">
+                    <label for = "key"><b>Từ khóa tìm kiếm</b></label>
+                    <input name = "key" id = "key" type="text" value="Từ khóa" class = "form-control">
+                </div>
+                <input type="submit"  value="Xuất file" class = "btn btn-primary btn-block">
+                <h2 style = "background-color: greenyellow;">{{message_export_file_successfully}}</h2>
+                 
+            </form>
+    
+            <form enctype = "multipart/form-data" class = "row-md-10 bg-light p-3 my-3"  method = "post">
+                {% csrf_token %}
+                <div class = "form-group">
+                    <label for = "dir1"><b>Nhập file</b></label>
+                    {{up_load_file.as_p}}
+                </div>
+                <input type="submit" formaction = "/action/import-file/" value="Nhập dữ liệu" class = "btn btn-primary btn-block">
+                <h2 style = "background-color: greenyellow;">{{message_import_file_successfully}}</h2>
+            </form>
+            
+            
+
+        </div>
+    
+
+        <!--Đoạn code dùng để tạo trường text dữ liệu-->
+    <div class = "row justify-content-around" style = "margin-left: 10px;">
+            <form  method="post" class = "col-md-6 bg-light p-3 my-3 row">
+                <div name = "label-name-1" class = "form-group column">
+                        {% csrf_token %}
+                    <div class = "form-group">
+                        <label for = "id0" style = "font-size: smaller;">ID</label>
+                        <input name = 'id0' id='id0' type="text" class = 'form-control'  style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id1" style = "font-size: smaller;">Tên thiết bị</label>
+                        <input name = "id1" id='id1' type="text" class = 'form-control'  style = "width: 200px;">
+                    </div>   
+                    <div class = "form-group">
+                        <label for = "id2" style = "font-size: smaller;">Số Serial</label>
+                        <input name = "id2" id = "id2"  type = "text"  class = "form-control" style = "width: 200px;">
+                    </div>    
+                    <div class = "form-group">
+                        <label for = "id3" style = "font-size: smaller;">Phân loại</label>
+                        <input name = "id3" type = "text" id = "id3"  class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id4" style = "font-size: smaller;">Nhà sản xuất</label>
+                        <input name = "id4" type = "text" id = "id4" class = "form-control" style = "width: 200px;">
+                    </div>
+                        <label for = "id5" style = "font-size: smaller;">Đài Viễn Thông/Điều hành/Vô Tuyến</label>
+                        <input name = "id5" type = "text" id = "id5" class = "form-control" style = "width: 200px;">
+                    <div class = "form-group">
+                        <label for = "id6" style = "font-size: smaller;">Ngày ĐV QLSDTS gửi yêu cầu SC</label>
+                        <input name = "id6" type = "text" id = "id6" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id7" style = "font-size: smaller;">Ngày CN hoàn thành phân loại kiểm tra tại ĐV QLSDTS</label>
+                        <input name = "id7" type = "text" id = "id7" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id8" style = "font-size: smaller;">Tình trạng tiếp nhận tại ĐV QLSDTS</label>
+                        <input name = "id8" type = "text" id = "id8" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id9" style = "font-size: smaller;">Ngày CN  gửi kế hoạch vận chuyển</label>
+                        <input name = "id9" type = "text" id = "id9" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id10" style = "font-size: smaller;">Ngày P.KT ĐV QLSDTS gửi phiếu xuất kho</label>
+                        <input name = "id10" type = "text" id = "id10" class = "form-control" style = "width: 200px;">
+                
+                    </div>
+                </div>   
+
+                <div name = "label-name-2" class = "form-group column p-4">
+                        {% csrf_token %}
+                    <div class = "form-group">
+                        <label for = "id11" style = "font-size: smaller;">Ngày giao cho đối tác mang đi SC</label>
+                        <input name = "id11" type = "text" id = "id11" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id12" style = "font-size: smaller;">Tình trạng bàn giao đi sửa chữa</label>
+                        <input name = "id12" type = "text" id = "id12" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id13" style = "font-size: smaller;">Ngày CN gửi yêu cầu nhập kho sau SC</label>
+                        <input name = "id13" type = "text" id = "id13" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id14" style = "font-size: smaller;">Ngày nhận về từ đối tác sau SC</label>
+                        <input name = "id14" type = "text" id = "id14" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id15" style = "font-size: smaller;">Số serial sau SC</label>
+                        <input name = "id15" type = "text" id = "id15" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id16" style = "font-size: smaller;">Ngày P.KT làm phiếu nhập kho sau SC</label>
+                        <input name = "id16" type = "text" id = "id16" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id17" style = "font-size: smaller;">Ngày hoàn thành kiểm tra sau SC</label>
+                        <input name = "id17" type = "text" id = "id17" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id18" style = "font-size: smaller;">Kết quả kiểm tra sau sửa chữa</label>
+                        <input name = "id18" type = "text" id = "id18" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id19" style = "font-size: smaller;">Ngày P.KT gửi phiếu xuất kho trả thiết bị</label>
+                        <input name = "id19" type = "text" id = "id19" class = "form-control" style = "width: 200px;">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "id20" style = "font-size: smaller;">Ngày giao tại kho ĐV QLSDTS</label>
+                        <input name = "id20" type = "text" id = "id20" class = "form-control" style = "width: 200px;">
+                
+                    </div>
+                </div>
+                    
+
+                <div name = "label-name-3" class = "form-group">
+                    <div class = "form-group row" >
+                        <input type = "button" onclick = "window.location = '/action/action-get-data/'" value = "Lấy dữ liệu" class = "form-control form-group btn-primary" />  
+                        <input type = "submit" formaction = "/action/delete/" name = "delete" value = "Xóa bản ghi" class = "form-control form-group btn-primary" />
+                        <input type = "button"  onclick = "clearContentField()" value = "Xóa" class = "form-control form-group btn-primary" />
+                        <input type = "submit" formaction = "/action/add/"   name = "add" value = "Thêm dữ liệu" class = "form-control form-group btn-primary" />  
+                        <input type="submit" formaction = "/action/update/"  value="Cập nhật" name = "update" class = "form-control form-group btn-primary" /> 
+                    </div>
+                </div>
+
+            </form>
+               
+               
+    </div>
+
+
+        <!--Đoạn code tạo danh sách để xem dữ liệu-->
+        <div>
+            <form class = "column">
+                <table style = "margin-left: 10px;">
+                    <tr style = "background-color: azure;">
+                        <td class = "p-4" style = "font-size: smaller;"><b>ID</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Tên thiết bị</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Số Serial</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Phân loại</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Nhà sản xuất</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Đài Viễn Thông/Điều hành/Vô Tuyến</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Ngày ĐV QLSDTS gửi yêu cầu SC</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Ngày CN hoàn thành phân loại kiểm tra tại ĐV QLSDTS</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Tình trạng tiếp nhận tại ĐV QLSDTS</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Ngày CN gửi kế hoạch vận chuyển</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Ngày P.KT ĐV QLSDTS gửi phiếu xuất kho</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Ngày giao cho đối tác mang đi SC</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Tình trạng bàn giao đi sửa chữa</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Ngày CN gửi yêu cầu nhập kho sau SC</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Ngày nhận về từ đối tác sau SC</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Số serial sau SC</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Ngày P.KT làm phiếu nhập kho sau SC</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Ngày hoàn thành kiểm tra sau SC</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Kết quả kiểm tra sau sửa chữa</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Ngày P.KT gửi phiếu xuất kho trả thiết bị</b></td>
+                        <td class = "p-4" style = "font-size: smaller;"><b>Ngày giao tại kho ĐV QLSDTS</b></td>
+                    </tr>
+                    
+                   
+                    <!-- Ghi đoạn code html vào thể h6 có id=##1 sau đó dùng javascript viết code lấy từ thẻ h6 để viết lên html, thẻ h6 có display=none vì thẻ này chỉ giữ code html nên không show lên html-->
+                    <h6 style = "display: none;" id = '##1'>{{records}}</h6> 
+                    <script lang = "javascript">
+                        document.writeln(document.getElementById('##1').innerText)
+                    </script>
+                    
+                    <h6 style = "display: none;" id = "##2">{{record_find_list}}</h6>
+                    <script lang = "javascript">
+                        document.writeln(document.getElementById('##2').innerText)
+                        
+                    </script>
+
+                    
+                </table>
+                
+                
+            </form>
+        </div>
+
+
+    </div>
+</body>
+
+</html>
+
+
